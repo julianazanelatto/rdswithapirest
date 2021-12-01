@@ -1,4 +1,4 @@
-package com.dioclass.rdswithapirest;
+package com.dioclass.rdswithapirest.ApiRest;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

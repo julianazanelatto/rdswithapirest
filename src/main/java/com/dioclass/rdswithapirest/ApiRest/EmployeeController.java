@@ -1,8 +1,7 @@
-package com.dioclass.rdswithapirest;
+package com.dioclass.rdswithapirest.ApiRest;
 
 import org.springframework.web.bind.annotation.*;
 
-import javax.persistence.Id;
 import java.util.List;
 
 @RestController
@@ -14,7 +13,8 @@ public class EmployeeController {
         this.repository = repository;
     }
 
-    @GetMapping("/employees") //definindo um label para o GetMapping
+    @GetMapping("/employees")
+    public //definindo um label para o GetMapping
     //criar método do tipo lista de employees
     List<Employee> listOfEmployeeAll(){
         return repository.findAll();
@@ -32,6 +32,10 @@ public class EmployeeController {
         return repository.findById(id).orElseThrow(() -> new EmployeeNotFoundException(id));
     }
 
+    @GetMapping("employees/get/{id}")
+    public Employee one(@PathVariable long id){
+        return repository.findById(id).orElseThrow(() -> new EmployeeNotFoundException(id));
+    }
     //modificação parcial
     @PutMapping("/employees/{id}")
     Employee replaceEmployee(@RequestBody Employee newEmployee, long id){
@@ -50,4 +54,6 @@ public class EmployeeController {
     void deleteEmployee(@PathVariable long id){
         repository.deleteById(id);
     }
+
+
 }

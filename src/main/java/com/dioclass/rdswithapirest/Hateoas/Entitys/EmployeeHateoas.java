@@ -1,15 +1,15 @@
-package com.dioclass.rdswithapirest;
+package com.dioclass.rdswithapirest.Hateoas.Entitys;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import org.springframework.hateoas.RepresentationModel;
+
+import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
-public class Employee {
+public class EmployeeHateoas extends RepresentationModel<EmployeeHateoas> {
     //entidade jpa para persistencia de dados
     @Id
+    @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
     private String name;
@@ -17,10 +17,10 @@ public class Employee {
     private String address;
 
     //empty constructor for jpa
-    public Employee(){
+    public EmployeeHateoas(){
     }
 
-    public Employee(String name, String role, String address){
+    public EmployeeHateoas(String name, String role, String address){
         this.name = name;
         this.role = role;
         this.address = address;
@@ -76,9 +76,9 @@ public class Employee {
     @Override
     public boolean equals(Object o){
         if (this == o) return true;
-        if (!(o instanceof Employee)) return false;
+        if (!(o instanceof EmployeeHateoas)) return false;
 
-        Employee employee = (Employee) o;
+        EmployeeHateoas employee = (EmployeeHateoas) o;
         return Objects.equals(this.id, employee.id)
                 && Objects.equals(this.name,employee.name)
                 && Objects.equals(this.role,employee.role)

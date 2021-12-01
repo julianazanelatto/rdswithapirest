@@ -1,4 +1,4 @@
-package com.dioclass.rdswithapirest;
+package com.dioclass.rdswithapirest.ApiRest;
 
 public class EmployeeNotFoundException extends RuntimeException{
     public EmployeeNotFoundException(long id){
