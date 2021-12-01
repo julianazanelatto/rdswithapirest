@@ -1,6 +1,5 @@
 package com.dioclass.rdswithapirest.MyfirstApi;
 
-import org.hibernate.annotations.NotFound;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,8 +23,7 @@ public class PersonController {
 
     @GetMapping("/persons")
     public List<Person> personFindAll(){
-        List<Person> all = repositoryPerson.findAll();
-        return all;
+        return repositoryPerson.findAll();
     }
     @GetMapping("/persons/{id}")
     public Optional personFindById(@PathVariable Long id){
