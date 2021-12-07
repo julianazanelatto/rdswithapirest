@@ -76,7 +76,3 @@ ETAPA 2 - Criando collections para employee
 ETAPA 3 - criando a classe order: com atributos descrição e status
 ETAPA 4 - Criando OrderController com links
 
-
-AULA 7. DOCUMENTAÇÃO DE API
-ETAPA 1 - O que é Swagger 3 (Documentação de API)?
-ETAPA 2 - Documentando nossa API
