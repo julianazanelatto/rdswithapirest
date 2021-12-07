@@ -25,11 +25,9 @@ public class PersonController {
     public List<Person> personFindAll(){
         return repositoryPerson.findAll();
     }
+
     @GetMapping("/persons/{id}")
     public Optional personFindById(@PathVariable Long id){
-        if (repositoryPerson.findById(id).isEmpty())
-        return null;
-        else
             return repositoryPerson.findById(id);
     }
 

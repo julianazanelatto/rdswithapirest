@@ -16,7 +16,6 @@ import java.util.Optional;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
-
 @RestController
 public class OrderControllerHateoas {
 
@@ -29,18 +28,19 @@ public class OrderControllerHateoas {
 
     @GetMapping("/orders")
     ResponseEntity<List<OrderHateoas>> consultOrderAll() {
-        List<OrderHateoas> ordersList = repositoryOrder.findAll();
         long idOrder;
-        if (ordersList.isEmpty()) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        //tipo var: lista
-        for (OrderHateoas orderHateoas : ordersList) {
+        Link linkUri;
+        List<OrderHateoas> orderList = repositoryOrder.findAll();
+        if (orderList.isEmpty()) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        for (OrderHateoas orderHateoas:orderList){
             idOrder = orderHateoas.getId();
-            Link linkUri = linkTo(methodOn(OrderControllerHateoas.class).consultOneOrder(idOrder)).withSelfRel();
+            linkUri = linkTo(methodOn(OrderControllerHateoas.class).consultOneOrder(idOrder)).withSelfRel();
             orderHateoas.add(linkUri);
-            linkUri = linkTo(methodOn(OrderControllerHateoas.class).consultOrderAll()).withRel("List of orders");
-            orderHateoas.add(linkUri); //link retorno
+            linkUri = linkTo(methodOn(OrderControllerHateoas.class).consultOrderAll()).withRel("Custumer order list");
+            orderHateoas.add(linkUri);
         }
-        return new ResponseEntity<List<OrderHateoas>>(ordersList, HttpStatus.OK);
+        return new ResponseEntity<List<OrderHateoas>>(orderList, HttpStatus.OK);
+
     }
 
     @GetMapping("/orders/{id}")
@@ -77,17 +77,19 @@ public class OrderControllerHateoas {
         repositoryOrder.deleteById(id);
     }
 
-    //criando métodos para cancelar e completar uma order no banco de dados
     @PutMapping("/orders/{id}/cancel")
-    ResponseEntity<?> cancelOrder(@PathVariable Long id) {
-        OrderHateoas cancelledOrder = repositoryOrder.findById(id).orElseThrow(() -> new OrderNotFoundExceptionHateoas(id));
-        if (cancelledOrder.getStatus() == Status.IN_PROGRESS) {
+    public ResponseEntity<?> cancelOrderById(@PathVariable long id){
+        OrderHateoas cancelledOrder = repositoryOrder.findById(id).orElseThrow(
+                () -> new OrderNotFoundExceptionHateoas(id));
+        if (cancelledOrder.getStatus() == Status.IN_PROGRESS){
             cancelledOrder.setStatus(Status.CANCELLED);
             cancelledOrder.add(linkTo(methodOn(OrderControllerHateoas.class).consultOneOrder(id)).withSelfRel());
-            cancelledOrder.add(linkTo(methodOn(OrderControllerHateoas.class).consultOrderAll()).withRel("custumer list of orders"));
+            cancelledOrder.add(linkTo(methodOn(OrderControllerHateoas.class).consultOrderAll())
+                    .withRel("Complete order list"));
             repositoryOrder.save(cancelledOrder);
-            return ResponseEntity.ok(cancelledOrder);
+            return new ResponseEntity<>(cancelledOrder,HttpStatus.OK);
         }
+
         return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED) //
                 .header(HttpHeaders.CONTENT_TYPE,
                         MediaTypes.HTTP_PROBLEM_DETAILS_JSON_VALUE) //
@@ -96,15 +98,18 @@ public class OrderControllerHateoas {
     }
 
     @PutMapping("/orders/{id}/complete")
-    ResponseEntity<?> completeOrder(@PathVariable Long id) {
-        OrderHateoas cancelledOrder = repositoryOrder.findById(id).orElseThrow(() -> new OrderNotFoundExceptionHateoas(id));
-        if (cancelledOrder.getStatus() == Status.IN_PROGRESS) {
+    public ResponseEntity<?> completeOrderById(@PathVariable long id){
+        OrderHateoas cancelledOrder = repositoryOrder.findById(id).orElseThrow(
+                () -> new OrderNotFoundExceptionHateoas(id));
+        if (cancelledOrder.getStatus() == Status.IN_PROGRESS){
             cancelledOrder.setStatus(Status.COMPLETED);
             cancelledOrder.add(linkTo(methodOn(OrderControllerHateoas.class).consultOneOrder(id)).withSelfRel());
-            cancelledOrder.add(linkTo(methodOn(OrderControllerHateoas.class).consultOrderAll()).withRel("Custumer list of orders"));
+            cancelledOrder.add(linkTo(methodOn(OrderControllerHateoas.class).consultOrderAll())
+                    .withRel("Complete order list"));
             repositoryOrder.save(cancelledOrder);
-            return ResponseEntity.ok(cancelledOrder);
+            return new ResponseEntity<>(cancelledOrder,HttpStatus.OK);
         }
+
         return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED) //
                 .header(HttpHeaders.CONTENT_TYPE,
                         MediaTypes.HTTP_PROBLEM_DETAILS_JSON_VALUE) //

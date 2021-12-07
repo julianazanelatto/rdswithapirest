@@ -6,7 +6,7 @@ import java.util.Objects;
 
 
 @Entity
-@Table(name="CUSTUME_ORDER")
+@Table(name="CUSTUMER_ORDER")
 //para habilitar o uso de links nos recursos precisamos utilizar a classe RepresentationMondel do Hateoas
 public class OrderHateoas extends RepresentationModel<OrderHateoas> {
     @Id
